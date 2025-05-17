@@ -4,6 +4,7 @@ import getBlog from "../controllers/getBlogbyId.js";
 import publishBlog from "../controllers/publishBlog.js";
 import draftBLog from "../controllers/draftBlog.js";
 import getCurrentBlogs from "../controllers/getCurrentBlogs.js";
+import getBlogbycategory from "../controllers/getBlogbycategory.js";
 
 const blogRouter = express.Router();
 
@@ -17,5 +18,7 @@ blogRouter.get('/',getAllBlog );
 blogRouter.get('/:id' ,getBlog );
 // get currentBlog
 blogRouter.get('/getCurrentBlogs',getCurrentBlogs);
+// get blog by category
+blogRouter.get("/category/:search",getBlogbycategory);
 
 export default blogRouter;
