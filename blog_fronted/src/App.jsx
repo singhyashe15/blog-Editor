@@ -3,12 +3,15 @@ import { HStack, Text, Input, Icon, IconButton, Menu, MenuItem, MenuButton, Menu
 import { FaEdit, FaUserCircle } from 'react-icons/fa';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Toaster,toast } from 'react-hot-toast';
+import { useBlog } from "../src/context/context.jsx";
 import './App.css'
 
 function App() {
+  const { search,setSearch } = useBlog();
   const [isExist, setIsExist] = useState(false);
   const navigate = useNavigate()
   let user = null;
+
   // get the user details
   useEffect(() => {
     user = JSON.parse(localStorage.getItem("users"));
@@ -17,14 +20,21 @@ function App() {
     }
   }, []);
 
+  //search by category 
+  const handleChange = (e) =>{
+    const {value} = e.target;
+    setSearch(value);
+  }
+
   // write a post
   const handlePost = () => {
-    if (user) {
+    if (!user) {
       navigate('/blog-post', { replace: true })
     } else {
       toast("Login First");
     }
   }
+
   return (
     <>
     {/* navbar */}
@@ -32,7 +42,7 @@ function App() {
         {/* Left Side */}
         <HStack align="start" spacing="3">
           <Text fontSize="2xl" fontWeight="bold">Blog</Text>
-          <Input placeholder="Search" size="sm" rounded="full" />
+          <Input placeholder="Search for category" value={search} size="sm" rounded="full" onChange={handleChange} />
         </HStack>
 
         {/* Right Side */}
