@@ -56,10 +56,10 @@ export default function Profile() {
     <Stack spacing={10} direction={stackDirection} p={4} maxW="1000px" mx="auto">
       <VStack justify="center" align="center" spacing={4} flexShrink={0}>
         <Avatar size="lg" />
-        <Button w={buttonWidth}>Upload</Button>
+        <Button >Upload</Button>
       </VStack>
 
-      <Flex direction="column" flex="1" gap={6}>
+      <Flex direction="column" flex="1" gap={6} px={{base :"8" ,md:"0"}}>
         <Stack
           direction={stackDirection}
           spacing={6}

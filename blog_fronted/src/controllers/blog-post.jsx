@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { toast } from "react-hot-toast";
 import uploadFile from '../helpers/uploadBlogImage.js';
+import { useNavigate } from 'react-router-dom';
 
 export default function BlogPost() {
   const [image, setImage] = useState(null);
@@ -14,7 +15,9 @@ export default function BlogPost() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Loading, setLoading] = useState(false);
   const [draftLoading,setDraftLoading] = useState(false);
+  const navigate = useNavigate();
 
+  // upload image in cloudinary
   const handleImageUpload =async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -37,13 +40,28 @@ export default function BlogPost() {
   };
 
   // save blog as draft
-  const handleDraft = () => {
-
+  const handleDraft = async() => {
+    const draftBlog = {
+      image,title,content,tags,status:"draft"
+    }
+    try {
+      setDraftLoading(true);
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await axios.post(`${url}/blog/save-draft`,draftBlog);
+      if(res.data.success){
+        toast.success("Saved as draft");
+      }
+    } catch (error) {
+      
+    }finally{
+      setDraftLoading(false)
+    }
   }
   // open preview section
   const handlePreview = () => {
     onOpen();
   };
+
   // publish the blog
   const pubishBlog = async () => {
     const postBlog = {
@@ -54,6 +72,11 @@ export default function BlogPost() {
       setLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await axios.post(`${url}/blog/publish`,postBlog);
+
+      if(res.data.success){
+        toast.success("Post added");
+        navigate("/",{replace:true} )
+      }
     } catch (error) {
 
     }finally{
