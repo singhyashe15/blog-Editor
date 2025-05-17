@@ -1,0 +1,23 @@
+import pool from "../config/db.js";
+
+const BlogSchema = async()=>{
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS blog (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        content VARCHAR(255) NOT NULL,
+        tags JSON NOT NULL,
+        status VARCHAR(255) CHECK(status IN ('draft', 'published')) NOT NULL,
+        imageUrl VARCHAR(255) ,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("✅ Blog Table Created Successfully");
+  } catch (err) {
+    console.error("❌ Error Creating Blog Table:", err);
+  }
+}
+
+export default BlogSchema;
