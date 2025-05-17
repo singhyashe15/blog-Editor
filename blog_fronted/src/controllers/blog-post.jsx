@@ -1,0 +1,183 @@
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Spinner, Text, Tag, TagCloseButton, TagLabel, Textarea, Image, Wrap, WrapItem, useDisclosure, Modal, ModalContent, ModalBody, ModalFooter, ModalOverlay, HStack, ModalCloseButton, ModalHeader } from '@chakra-ui/react';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { toast } from "react-hot-toast";
+
+export default function BlogPost() {
+  const [image, setImage] = useState(null);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [Loading, setLoading] = useState(false);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) setImage(URL.createObjectURL(file));
+  };
+
+  // add the tag
+  const handleAddTag = (e) => {
+    if (e.key === 'Enter' && tagInput.trim() && !tags.includes(tagInput)) {
+      setTags([...tags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  // handle removing the tags
+  const handleRemoveTag = (tag) => {
+    setTags(tags.filter((t) => t !== tag));
+  };
+
+  // save blog as draft
+  const handleDraft = () => {
+
+  }
+  // open preview section
+  const handlePreview = () => {
+    onOpen();
+  };
+  // publish the blog
+  const pubishBlog = async () => {
+    const postBlog = {
+      image,title,content,tags,status:"published"
+    }
+    console.log(postBlog)
+    try {
+      const url = import.meta.env.VITE_SERVER_URL;
+      const res = await axios.post(`${url}/blog/publish`,postBlog);
+    } catch (error) {
+
+    }
+  }
+  return (
+    <Flex justify="center" align="start" p={6}>
+      <Box
+        as={motion.div}
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        w={{ base: '100%', md: '60%' }}
+        bg="white"
+        p={8}
+        rounded="lg"
+        shadow="lg"
+      >
+        <Heading mb={6}>Publish a New Blog</Heading>
+
+        <FormControl mb={4}>
+          <FormLabel>Upload Cover Image</FormLabel>
+          <Input type="file" onChange={handleImageUpload} />
+          {image && (
+            <Image mt={4} src={image} alt="Preview" borderRadius="md" boxSize="200px" objectFit="cover" />
+          )}
+        </FormControl>
+
+        <FormControl mb={4}>
+          <FormLabel>Title</FormLabel>
+          <Input
+            placeholder="Enter blog title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </FormControl>
+
+        <FormControl mb={4}>
+          <FormLabel>Content</FormLabel>
+          <Textarea
+            placeholder="Write your content here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+          />
+        </FormControl>
+
+        <FormControl mb={4}>
+          <FormLabel>Tags</FormLabel>
+          <Input
+            placeholder="Enter a tag and press Enter"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleAddTag}
+          />
+          <Wrap mt={2}>
+            {tags.map((tag) => (
+              <WrapItem key={tag}>
+                <Tag
+                  size="md"
+                  variant="solid"
+                  colorScheme="orange"
+                  borderRadius="full"
+                  padding="4"
+                >
+                  <TagLabel>{tag}</TagLabel>
+                  <TagCloseButton onClick={() => handleRemoveTag(tag)} />
+                </Tag>
+              </WrapItem>
+            ))}
+          </Wrap>
+        </FormControl>
+        <HStack alignItems="center" justify="center">
+          <Button
+            colorScheme="teal"
+            size="lg"
+            mt={6}
+            disabled={Loading}
+            leftIcon={Loading && <Spinner size="md" />}
+            onClick={handleDraft}
+          >
+            {Loading ? "Saving" : "Save as Draft"}
+          </Button>
+          <Button
+            colorScheme="teal"
+            size="lg"
+            mt={6}
+            onClick={handlePreview}
+          >
+            Publish
+          </Button>
+        </HStack>
+      </Box>
+      <Modal isOpen={isOpen} onClose={onClose} >
+        <ModalOverlay />
+        <ModalContent p={4} maxW="350px" margin="auto">
+          <ModalCloseButton />
+          <ModalHeader align="center" bg="gray.200" mt="8" rounded="full">Preview It</ModalHeader>
+          <ModalBody>
+            <Flex justify="center" align="center" direction="column">
+              <Image src='' />
+              <Text alignContent="center" mt="4">{title}</Text>
+              <Wrap mt={2}>
+                {tags.map((tag) => (
+                  <WrapItem key={tag}>
+                    <Tag
+                      size="md"
+                      variant="solid"
+                      colorScheme="orange"
+                      borderRadius="full"
+                      padding="4"
+                    >
+                      <TagLabel>{tag}</TagLabel>
+                      <TagCloseButton onClick={() => handleRemoveTag(tag)} />
+                    </Tag>
+                  </WrapItem>
+                ))}
+              </Wrap>
+              <Text mt="4">{content}</Text>
+            </Flex>
+            <ModalFooter justify="center" align="center">
+                <Button colorScheme='teal'
+                  disabled={Loading}
+                  leftIcon={Loading && <Spinner size="md" />}
+                  type='submit'
+                  onClick={() => pubishBlog()} >
+                  {Loading ? "Publishing" : "Publish Now"}</Button>
+            </ModalFooter>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Flex>
+  );
+}
