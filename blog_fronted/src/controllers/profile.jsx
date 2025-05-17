@@ -49,7 +49,8 @@ export default function Profile() {
       const updatedres = await axios.post(`${url}/api/update-details`, payload);
 
     } catch (error) {
-
+      console.log(error)
+      toast.error("Not updated");
     }
   }
   return (

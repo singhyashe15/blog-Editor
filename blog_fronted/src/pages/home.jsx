@@ -21,7 +21,7 @@ export default function Home() {
 
   const getPosts = async () => {
     const url = import.meta.env.VITE_SERVER_URL;
-    const res = await axios.get(`${url}/blogs/getCurrentBlogs`);
+    const res = await axios.get(`${url}/api/blogs/getCurrentBlogs`);
     console.log(res);
     return [];
   }

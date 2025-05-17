@@ -71,14 +71,19 @@ export default function BlogPost() {
     try {
       setLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await axios.post(`${url}/blog/publish`,postBlog);
-
+      
+      const res = await axios.post(`${url}/api/blogs/publish`,postBlog);
+      console.log(res)
       if(res.data.success){
         toast.success("Post added");
-        navigate("/",{replace:true} )
+        setContent("");
+        setTags([]);
+        setTitle("");
+        onClose();
       }
     } catch (error) {
-
+      console.log(error)
+      toast.error("Failed to publish blog. Please try again.");
     }finally{
       setLoading(false)
     }
