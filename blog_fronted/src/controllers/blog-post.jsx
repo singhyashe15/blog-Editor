@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { toast } from "react-hot-toast";
+import uploadFile from '../helpers/uploadBlogImage.js';
 
 export default function BlogPost() {
   const [image, setImage] = useState(null);
@@ -12,10 +13,14 @@ export default function BlogPost() {
   const [tagInput, setTagInput] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Loading, setLoading] = useState(false);
+  const [draftLoading,setDraftLoading] = useState(false);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload =async (e) => {
     const file = e.target.files[0];
-    if (file) setImage(URL.createObjectURL(file));
+    if (file) {
+      const uploadPhoto = await uploadFile(file)
+      setImage(uploadPhoto?.url)
+    };
   };
 
   // add the tag
@@ -46,10 +51,13 @@ export default function BlogPost() {
     }
     console.log(postBlog)
     try {
+      setLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await axios.post(`${url}/blog/publish`,postBlog);
     } catch (error) {
 
+    }finally{
+      setLoading(false)
     }
   }
   return (
@@ -124,11 +132,11 @@ export default function BlogPost() {
             colorScheme="teal"
             size="lg"
             mt={6}
-            disabled={Loading}
-            leftIcon={Loading && <Spinner size="md" />}
+            disabled={draftLoading}
+            leftIcon={draftLoading && <Spinner size="md" />}
             onClick={handleDraft}
           >
-            {Loading ? "Saving" : "Save as Draft"}
+            {draftLoading ? "Saving" : "Save as Draft"}
           </Button>
           <Button
             colorScheme="teal"
