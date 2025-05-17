@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import axios from "axios";
-import { useBlog } from "../context/context.jsx";
+import { useBlog } from "../context/blogcontext.jsx";
 
 export default function Home() {
 

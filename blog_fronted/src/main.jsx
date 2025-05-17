@@ -4,7 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom';
-import { BlogProvider } from './context/context.jsx';
+import { BlogProvider } from './context/blogcontext.jsx';
 import router from './routes/route.jsx'
 import './index.css'
 import App from './App.jsx'

@@ -3,7 +3,7 @@ import { HStack, Text, Input, Icon, IconButton, Menu, MenuItem, MenuButton, Menu
 import { FaEdit, FaUserCircle } from 'react-icons/fa';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Toaster,toast } from 'react-hot-toast';
-import { useBlog } from "../src/context/context.jsx";
+import { useBlog } from "./context/blogcontext.jsx";
 import './App.css'
 
 function App() {
