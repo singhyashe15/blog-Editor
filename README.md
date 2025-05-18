@@ -1,6 +1,6 @@
 # 📝 Full Stack Blog Editor
 
-A feature-rich full stack Blog Editor that allows users to create, preview, publish, and manage blog posts with support for image uploads, tag management, and user authentication (JWT) and auto save blog as draft after every 30 sec or evry 5sec of inactivity.
+A feature-rich full stack Blog Editor that allows users to create, preview, publish, and manage blog posts with support for image uploads, tag management, and user authentication (JWT) and auto save blog as draft after every 30 sec or every 5sec of inactivity.
 
 ---
 
@@ -50,7 +50,7 @@ A feature-rich full stack Blog Editor that allows users to create, preview, publ
 
 ---
 ### Clone the repository
-git clone [https://github.com/yourusername/blog-editor.git](https://github.com/singhyashe15/blog-Editor.git)
+git clone [https://github.com/singhyashe15/blog-Editor.git](https://github.com/singhyashe15/blog-Editor.git)
 
 
 ### 📦 Backend Setup (`/server`)
