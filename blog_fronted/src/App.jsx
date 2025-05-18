@@ -7,16 +7,18 @@ import { useBlog } from "./context/blogcontext.jsx";
 import './App.css';
 
 function App() {
+  const [user,setUser] = useState(null);
   const { search, setSearch } = useBlog();
   const [isExist, setIsExist] = useState(false);
   const location = useLocation()
   const navigate = useNavigate()
-  let user = null;
+  
 
   // get the user details
   useEffect(() => {
-    user = JSON.parse(localStorage.getItem("users"));
-    if (user) {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser)
       setIsExist(true)
     }
   }, []);
@@ -76,9 +78,6 @@ function App() {
                 </MenuItem>
                 <MenuItem onClick={() => navigate('/profile')}>
                   <Icon as={FaUserCircle} mr={2} /> Edit Profile
-                </MenuItem>
-                <MenuItem onClick={() => navigate('/change-password')}>
-                  <Icon as={FaLock} mr={2} /> Change Password
                 </MenuItem>
                 <MenuItem color="red.500" onClick={() => navigate('/logout', { replace: true })}>
                   <Icon as={FaSignInAlt} mr={2} /> Sign Out

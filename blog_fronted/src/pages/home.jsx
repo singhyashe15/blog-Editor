@@ -8,17 +8,20 @@ import { useBlog } from "../context/blogcontext.jsx";
 
 export default function Home() {
   const [blog, setBlog] = useState([])
+  const [user,setUser] = useState(null)
+  const [msg,setMsg] = useState(null)
   const StackComponent = useBreakpointValue({ base: VStack, md: HStack })
   const CategoryComponent = useBreakpointValue({ base: HStack, md: VStack })
   const { search, setSearch } = useBlog();
   const navigate = useNavigate();
 
-  let user = null;
+
   // get the user details
   useEffect(() => {
-    user = JSON.parse(localStorage.getItem("users"));
-    if (user) {
-      setIsExist(true)
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    console.log(localStorage.getItem("user"))
+    if (storedUser) {
+      setUser(storedUser)
     }
   }, []);
 
@@ -26,8 +29,13 @@ export default function Home() {
     async function getPosts() {
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await axios.get(`${url}/api/blogs/category/${search}`);
+      console.log(res)
       if (res.data.success) {
-        setBlog(res.data.blogbyCategory)
+        if(res.data.blogbyCategory.rows.length > 0){
+          setBlog(res.data.blogbyCategory.rows)
+        }else{
+          setMsg("No published right now!!")
+        }
       }
     }
     getPosts();
@@ -38,12 +46,13 @@ export default function Home() {
     const url = import.meta.env.VITE_SERVER_URL;
     const res = await axios.get(`${url}/api/blogs`);
     console.log(res);
-    return res.data.success ? res.data.allBlogs : [];
+    return res.data.success ? res.data.allBlogs.rows : [];
   }
   // get all recent post
   const { data } = useQuery({
-    queryKey: "postsThisMonth",
-    queryFn: getAllPosts(),
+    queryKey: "posts",
+    queryFn: getAllPosts,
+    staleTime:10000
   })
 
   const handleCategory = (category) => {
@@ -51,6 +60,7 @@ export default function Home() {
   }
 
   const handleRead = (id) => {
+    console.log(id)
     if (user) {
       navigate(`/blog/${id}`);
     } else {
@@ -79,7 +89,7 @@ export default function Home() {
 
       <Stack direction={{ base: "column-reverse", md: "row" }} spacing={8} align="center" mt="4" w="100%">
         <VStack spacing={8} p={4} w="75%">
-          {blog?.length === 0 ?
+          {blog?.length === 0 && msg === null ?
             data?.map((blog) => {
               return (
                 <StackComponent key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
@@ -94,7 +104,7 @@ export default function Home() {
               )
             })
             :
-            blog?.map((blog) => {
+            msg === null ? blog?.map((blog) => {
               return (
                 <StackComponent key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
                   <Box w="40%">
@@ -106,7 +116,10 @@ export default function Home() {
                   </VStack>
                 </StackComponent>
               )
-            })
+            }) :
+              <Text>
+                {msg}
+              </Text>
           }
         </VStack>
 

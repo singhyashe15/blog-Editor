@@ -2,10 +2,11 @@ import { Avatar, Button, Flex, VStack, Input, InputGroup, InputLeftElement, Text
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaUserCircle, FaEnvelope, FaFacebook, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-  const [updateDetail, setUpdateDetail] = useState({ name: "", email: "", bio: "", youtube: "", instagram: "", facebook: "", twitter: "" });
+  
+  const [updateDetail, setUpdateDetail] = useState({ id:0,name: "", email: "", bio: "", youtube: "", instagram: "", facebook: "", twitter: "" });
   // Use Stack with direction controlled by breakpoint
   const stackDirection = useBreakpointValue({ base: "column", md: "row" });
   const inputWidth = useBreakpointValue({ base: "100%", md: "400px" });
@@ -13,41 +14,42 @@ export default function Profile() {
   const buttonWidth = useBreakpointValue({ base: "100%", md: "20%" });
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("users"));
+    const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setUpdateDetail((prev) => ({
         ...prev,
         name: storedUser.name || "",
+        id:storedUser.id || -1
       }));
     }
   }, []);
 
   const handleLink = (e) => {
     const { name, value } = e.target;
-    setUpdateDetail((prev) = {
+    setUpdateDetail((prev) => ({
       ...prev,
       [name]: value,
-    })
+    }))
   }
 
   const handleBio = (e) => {
     const { name, value } = e.target;
-    setUpdateDetail((prev) = {
+    console.log(name + " " + value)
+    setUpdateDetail((prev) => ({
       ...prev,
       [name]: value,
-    })
+    }))
   }
 
   const handleupdate = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    console.log(updateDetail)
     try {
-      const payload = new FormData();
-      for (const key in formData) {
-        payload.append(key, formData[key]);
-      }
       const url = import.meta.env.VITE_SERVER_URL;
-      const updatedres = await axios.post(`${url}/api/auth/update-details`, payload);
-
+      const updatedres = await axios.post(`${url}/api/auth/update-details`, updateDetail);
+      if(updatedres.data.success){
+        toast.success(updatedres.data.msg)
+      }
     } catch (error) {
       console.log(error)
       toast.error("Not updated");
@@ -72,7 +74,7 @@ export default function Profile() {
             <Input
               name="name"
               id="name"
-              placeholder={user?.name || "Name"}
+              placeholder={updateDetail?.name || "Name"}
               variant="filled"
             />
           </InputGroup>
@@ -83,7 +85,7 @@ export default function Profile() {
               type="email"
               name="email"
               id="email"
-              placeholder={user?.email || "Email"}
+              placeholder={updateDetail?.email || "Email"}
               variant="filled"
             />
           </InputGroup>
@@ -91,13 +93,14 @@ export default function Profile() {
 
         <Textarea
           placeholder="Enter a Bio"
+          name="bio"
           w={textareaWidth}
           resize="vertical"
           minH="100px"
           variant="filled"
           onChange={handleBio}
         />
-        <Button w={buttonWidth} alignSelf={{ base: "stretch", md: "flex-start" }} onClick={() => handleupdate}>
+        <Button w={buttonWidth} alignSelf={{ base: "stretch", md: "flex-start" }} onClick={() => handleupdate()}>
           Add a Bio
         </Button>
 

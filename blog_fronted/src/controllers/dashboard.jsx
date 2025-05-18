@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, HStack, Stack, Text, useBreakpointValue, VStack, Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
+import { Avatar, Box, Image, HStack, Stack, Text, useBreakpointValue, VStack, Tabs, Tab, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ export default function Dashboard() {
   // store user detail
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    console.log(location)
+   
     if (storedUser) {
       setUser(storedUser)
     }
@@ -19,13 +19,14 @@ export default function Dashboard() {
   // get all the post 
   const getSelfPost = async () => {
     const url = import.meta.env.VITE_SERVER_URL;
-    const res = await axios.get(`${url}/self/${user.id}`);
+    const res = await axios.get(`${url}/api/blogs/self/${user.id}`);
+    console.log(res)
     return res.data.success ? res.data.post : []
   }
 
   const { data } = useQuery({
     queryKey: "SelfPost",
-    queryFn: getSelfPost(),
+    queryFn: getSelfPost,
     staleTime: 10000
   })
 
@@ -37,7 +38,7 @@ export default function Dashboard() {
         </Box>
         <VStack>
           <Text fontSize="xl" fontWeight="semibold">{user?.name || "Guest"}</Text>
-          <Text fontSize="lg" fontWeight="semibold">{user?.bio || "its a blog-editor page"}</Text>
+          <Text fontSize="lg" fontWeight="semibold">{data.user?.rows[0].bio || "its a blog-editor page"}</Text>
           <HStack>
             <Text fontSize="lg" fontWeight="semibold">Total Blogs : { }</Text>
             <Text fontSize="lg" fontWeight="semibold">Draft Blogs : { }</Text>
@@ -53,15 +54,15 @@ export default function Dashboard() {
           <TabPanels>
             <TabPanel>
               {
-                data?.allPublishedBlog?.map((blog) => {
+                data?.allPublishedBlog?.rows.map((blog) => {
                   return (
-                    <HStack key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
+                    <HStack key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8" mt="4">
                       <Box w="40%">
                         <Image src={blog?.imageUrl} alt="pic" />
                       </Box>
                       <VStack align="start" w="auto" alignItems="center">
                         <Text fontWeight="semibold">{blog?.title}</Text>
-                        <Text fontSize="xl" fontWeight="semibold">Published at : {moment(blog?.updated_at).format(DD-MM-YYYY)}</Text>
+                        <Text fontSize="xl" fontWeight="semibold">Published at : {moment(blog?.updated_at).format('DD-MM-YYYY')}</Text>
                       </VStack>
                     </HStack>
                   )
@@ -70,16 +71,16 @@ export default function Dashboard() {
             </TabPanel>
             <TabPanel>
               {
-                data?.allDraftBlog?.map((blog) => {
+                data?.allDraftBlog?.rows.map((blog) => {
                   return (
-                    <HStack key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
+                    <HStack key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8" mt="4" justify="center" align="center">
                       <Box w="40%">
                         <Image src={blog?.imageUrl} alt="pic" />
                       </Box>
                       <VStack align="start" w="auto" alignItems="center">
                         <Text fontSize="xl" fontWeight="semibold">{blog?.title}</Text>
                         <Text fontSize="lg" fontWeight="200" my="2">{blog?.content}</Text>
-                        <Text fontSize="xl" fontWeight="semibold">Drafted at : {moment(blog?.updated_at).format("DD-MM-YYYY")}</Text>
+                        <Text fontSize="xl" fontWeight="semibold">Drafted at : {moment(blog?.updated_at).format('DD-MM-YYYY')}</Text>
                       </VStack>
                     </HStack>
                   )

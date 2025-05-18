@@ -17,7 +17,7 @@ export default function Login() {
     setUser((prev) => {
       return {
         ...prev,
-        name: value
+        [name]: value
       }
     })
   }
@@ -30,10 +30,10 @@ export default function Login() {
   };
 
   // proceed to login
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password } = user;
-
+    const { email, password } = user;
+    console.log(email)
     if (!email || !password) {
       return toast.error("Fill all required fields.");
     }
@@ -41,8 +41,10 @@ export default function Login() {
       const url = import.meta.env.VITE_SERVER_URL;
       setLoading(true);
       const res = await axios.post(`${url}/api/auth/login`, user);
-      if (res.success) {
-        toast.success(res.data.msg);
+      if (res.data.success) {
+        console.log("Hello")
+        console.log(res.data.message)
+        toast.success(res.data.message);
         navigate('/', { replace: true })
       }
 
@@ -83,7 +85,8 @@ export default function Login() {
             colorScheme='teal'
             disabled={Loading}
             leftIcon={Loading && <Spinner size="md" />}
-            type='submit' >
+            type='submit'
+            onClick={handleSubmit} >
             {Loading ? "Verifying" : "Sign In"}
           </Button>
         </form>

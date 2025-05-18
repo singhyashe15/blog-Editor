@@ -16,7 +16,7 @@ export default function ReadBlog() {
   }
   const { data } = useQuery({
     queryKey: "blogId",
-    queryFn: getBlogById(),
+    queryFn: getBlogById,
     staleTime: 1000
   })
 

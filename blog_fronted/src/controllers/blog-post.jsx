@@ -1,7 +1,7 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Spinner, Text, Tag, TagCloseButton, TagLabel, Textarea, Image, Wrap, WrapItem, useDisclosure, Modal, ModalContent, ModalBody, ModalFooter, ModalOverlay, HStack, ModalCloseButton, ModalHeader } from '@chakra-ui/react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from "react-hot-toast";
 import uploadFile from '../helpers/uploadBlogImage.js';
 
@@ -14,20 +14,33 @@ export default function BlogPost() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Loading, setLoading] = useState(false);
   const [draftLoading, setDraftLoading] = useState(false);
-  const [user,setUser] = useState(null);
+  const [user, setUser] = useState(null);
+
+  const saveIntervalRef = useRef(null); // for 30s interval
 
   // stored user detail from localstorage
-  useEffect(()=>{
+  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if(storedUser){
+    if (storedUser) {
       setUser(storedUser)
     }
-  })
+  }, [])
+
+  // for 30sec interval saving the post as draft
+  useEffect(() => {
+    saveIntervalRef.current = setInterval(() => {
+      handleDraft();
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(saveIntervalRef.current);
+  }, []);
+
   // upload image in cloudinary
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const uploadPhoto = await uploadFile(file)
+      console.log(uploadPhoto)
       setImage(uploadPhoto?.url)
     };
   };
@@ -47,22 +60,49 @@ export default function BlogPost() {
 
   // save blog as draft
   const handleDraft = async () => {
+   
     const draftBlog = {
-      image, title, content, tags, status: "draft",id:user?.id
+      image, title, content, tags, status: "draft", id: user?.id
     }
+   
     try {
       setDraftLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await axios.post(`${url}/blog/save-draft`, draftBlog);
+      const res = await axios.post(`${url}/api/blogs/save-draft`, draftBlog);
       if (res.data.success) {
         toast.success("Saved as draft");
+        setImage(null)
+        setContent("");
+        setTags([]);
+        setTitle("");
       }
     } catch (error) {
-
+      console.log(error)
+      toast.error("Failed to publish blog. Please try again.");
     } finally {
       setDraftLoading(false)
     }
   }
+
+  const handleChange = (e)=>{
+    const {name,value} = e.target;
+    if(name === 'title'){
+      setTitle(value);
+    }else if(name === "content"){
+      setContent(value);
+    }else if(name === 'tags'){
+      setTags(value);
+    }
+   
+    if (timeoutId) clearTimeout(timeoutId);
+
+    const id = setTimeout(() => {
+      handleDraft();
+    }, 30000);
+
+    setTimeoutId(id);
+  }
+
   // open preview section
   const handlePreview = () => {
     onOpen();
@@ -71,7 +111,7 @@ export default function BlogPost() {
   // publish the blog
   const pubishBlog = async () => {
     const postBlog = {
-      image, title, content, tags, status: "published",id:user?.id
+      image, title, content, tags, status: "published", id: user?.id
     }
     console.log(postBlog)
     try {
@@ -121,8 +161,9 @@ export default function BlogPost() {
           <FormLabel>Title</FormLabel>
           <Input
             placeholder="Enter blog title"
+            name="title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleChange}
           />
         </FormControl>
 
@@ -130,8 +171,9 @@ export default function BlogPost() {
           <FormLabel>Content</FormLabel>
           <Textarea
             placeholder="Write your content here..."
+            name="content"
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={handleChange}
             rows={6}
           />
         </FormControl>
@@ -140,8 +182,9 @@ export default function BlogPost() {
           <FormLabel>Tags</FormLabel>
           <Input
             placeholder="Enter a tag and press Enter"
+            name="tags"
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={handleChange}
             onKeyDown={handleAddTag}
           />
           <Wrap mt={2}>
