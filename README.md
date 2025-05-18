@@ -53,9 +53,7 @@ A feature-rich full stack Blog Editor that allows users to create, preview, publ
 git clone [https://github.com/singhyashe15/blog-Editor.git](https://github.com/singhyashe15/blog-Editor.git)
 
 
-### 📦 Backend Setup (`/server`)
-
-1.🌐 Backend Setup (/blog_fronted)
+1.🌐 Backend Setup (/blog_backend)
    **Navigate to blog_backend folder**
    
   npm install
@@ -64,7 +62,7 @@ git clone [https://github.com/singhyashe15/blog-Editor.git](https://github.com/s
   nodemon server
 
   
-2.🌐 Frontend Setup (/blog_backend)
+2.🌐 Frontend Setup (/blog_fronted)
  **Navigate to blog_fronted folder**
 
 Install dependencies
