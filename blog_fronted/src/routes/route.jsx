@@ -10,6 +10,7 @@ import Error from '../pages/error.jsx'
 import Profile from '../controllers/profile.jsx';
 import BlogPost from '../controllers/blog-post.jsx';
 import ReadBlog from '../controllers/readblog.jsx';
+import Dashboard from '../controllers/dashboard.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
         path: 'login',
         element: <Login />,
         errorElement: <Error />
+      },
+      {
+        path:'dashboard',
+        element:<Dashboard/>,
+        errorElement:<Error/>
       },
       {
         path: 'profile',
