@@ -50,7 +50,7 @@ export default function Login() {
   }
 
   return (
-    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100vh" width="100vw">
+    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="8">
       <Text fontStyle="italic" fontSize="2xl" fontFamily="cursive" >Welcome Back</Text>
       <Box width={['90%', '70%', '30%']} bg="slate.500" color="black" border="2px solid" borderColor="blue.400" borderRadius="lg" boxShadow="md" textAlign="center">
         <form onSubmit={handleSubmit}>
