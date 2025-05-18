@@ -10,7 +10,7 @@ const BlogSchema = async () => {
       tags JSONB , 
       status VARCHAR(255) CHECK (status IN ('draft', 'published')),
       imageUrl VARCHAR(255),
-      userId INTEGER REFERENCES user(id),
+      userId INTEGER REFERENCES users(id),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
