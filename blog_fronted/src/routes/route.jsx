@@ -11,6 +11,8 @@ import Profile from '../controllers/profile.jsx';
 import BlogPost from '../controllers/blog-post.jsx';
 import ReadBlog from '../controllers/readblog.jsx';
 import Dashboard from '../controllers/dashboard.jsx';
+import ProtectedRoute from '../controllers/protectedRoute.jsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -31,30 +33,46 @@ const router = createBrowserRouter([
         errorElement: <Error />
       },
       {
-        path:'dashboard',
-        element:<Dashboard/>,
-        errorElement:<Error/>
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
+        errorElement: <Error />
       },
       {
         path: 'profile',
-        element: <Profile />,
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>),
         errorElement: <Error />
       },
       {
         path: 'blog-post',
-        element: <BlogPost />,
+        element: (
+          <ProtectedRoute>
+            <BlogPost />
+          </ProtectedRoute>),
         errorElement: <Error />
       },
       {
-        path : 'read-blog/:id',
-        element:<ReadBlog/>,
-        errorElement:<Error/>
+        path: 'blog/:id',
+        element: (
+          <ProtectedRoute>
+            <ReadBlog />
+          </ProtectedRoute>),
+        errorElement: <Error />
       }
     ]
   },
   {
     path: 'logout',
-    element: <Logout />,
+    element: (
+      <ProtectedRoute>
+        <Logout />
+      </ProtectedRoute>),
     errorElement: <Error />
   },
   {

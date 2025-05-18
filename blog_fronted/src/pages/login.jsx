@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Text, FormControl, InputGroup, Input, InputLeftElement, InputRightElement, Spinner, Button, Link } from "@chakra-ui/react";
 import toast from 'react-hot-toast';
-import { FaEye, FaEyeSlash ,FaEnvelope, FaKey} from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaKey } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +32,11 @@ export default function Login() {
   // proceed to login
   const handleSubmit = async () => {
     e.preventDefault();
+    const { name, email, password } = user;
 
+    if (!email || !password) {
+      return toast.error("Fill all required fields.");
+    }
     try {
       const url = import.meta.env.VITE_SERVER_URL;
       setLoading(true);
@@ -43,7 +47,7 @@ export default function Login() {
       }
 
     } catch (error) {
-       toast.error(error.response.data.msg)
+      toast.error(error.response.data.msg)
     } finally {
       setLoading(false)
     }
@@ -57,13 +61,13 @@ export default function Login() {
           <FormControl p="8">
             <InputGroup>
               <InputLeftElement>
-                  <FaEnvelope/>
+                <FaEnvelope />
               </InputLeftElement>
               <Input placeholder="Enter registered Email" name="email" onChange={handleChange} />
             </InputGroup>
             <InputGroup my="4">
               <InputLeftElement>
-                <FaKey/>
+                <FaKey />
               </InputLeftElement>
               <InputRightElement cursor="pointer" onClick={() => toggle('pass')}>
                 {

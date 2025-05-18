@@ -52,7 +52,7 @@ export default function Home() {
 
   const handleRead = (id) => {
     if (user) {
-      navigate(`/read-blog/${id}`);
+      navigate(`/blog/${id}`);
     } else {
       toast("Login at first to read the blogs");
     }
