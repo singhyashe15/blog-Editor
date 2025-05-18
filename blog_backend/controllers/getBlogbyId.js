@@ -10,7 +10,7 @@ const getBlog = async (req, res) => {
       return res.status(301).json({ msg: "Blogs not Founded", success: false });
     }
     // fetch the user who has published that blog
-    const user = await pool.query("SELECT name FROM USER WHERE id=$1", [blog.rows[0].userId]);
+    const user = await pool.query("SELECT name FROM USERS WHERE id=$1", [blog.rows[0].userId]);
     
     return res.status(201).json({ post: { user, blog }, success: true });
   } catch (error) {
