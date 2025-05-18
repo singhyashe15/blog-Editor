@@ -2,8 +2,8 @@ import pool from "../config/db.js"
 
 const draftBLog = async (req,res) =>{
   try {
-    const {blog} = await req.body;
-    const draft = await pool.query("INSERT INTO BLOG (title,content,tags,status) VALUES ($1,$2,$3,$4,$5) RETURNING *", [blog.title,blog.content,blog.tags,blog.status]);
+    const blog = await req.body;
+    const draft = await pool.query("INSERT INTO BLOG (title,content,tags,status,userId) VALUES ($1,$2,$3,$4,$5) RETURNING *", [blog.title,blog.content,blog.tags,blog.status,blog.id]);
 
     if(draft){
       return res.status(201).json({msg:"blog drafted ", success : true});

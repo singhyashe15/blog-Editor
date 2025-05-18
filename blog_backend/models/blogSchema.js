@@ -7,9 +7,10 @@ const BlogSchema = async () => {
       id SERIAL PRIMARY KEY,
       title VARCHAR(255),
       content VARCHAR(255),
-      tags JSON , 
+      tags JSONB , 
       status VARCHAR(255) CHECK (status IN ('draft', 'published')),
       imageUrl VARCHAR(255),
+      userId FOREIGN KEY REFERENCES user(id),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

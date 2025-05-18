@@ -4,7 +4,7 @@ const publishBlog = async (req,res) => {
   try {
     const blog = req.body;
     console.log( blog)
-    const published = await pool.query("INSERT INTO BLOG (title,content,tags,status) VALUES ($1,$2,$3,$4) RETURNING *", [blog.title,blog.content,JSON.stringify(blog.tags),blog.status]);
+    const published = await pool.query("INSERT INTO BLOG (title,content,tags,status,userId) VALUES ($1,$2,$3,$4,$5) RETURNING *", [blog.title,blog.content,JSON.stringify(blog.tags),blog.status,blog.id]);
 
     if(published){
       return res.status(201).json({msg:"blog publised", success : true});
