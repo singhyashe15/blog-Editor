@@ -40,7 +40,7 @@ export default function Login() {
     try {
       const url = import.meta.env.VITE_SERVER_URL;
       setLoading(true);
-      const res = await axios.post(`${url}/api/login`, user);
+      const res = await axios.post(`${url}/api/auth/login`, user);
       if (res.success) {
         toast.success(res.data.msg);
         navigate('/', { replace: true })

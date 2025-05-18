@@ -46,7 +46,7 @@ export default function Profile() {
         payload.append(key, formData[key]);
       }
       const url = import.meta.env.VITE_SERVER_URL;
-      const updatedres = await axios.post(`${url}/api/update-details`, payload);
+      const updatedres = await axios.post(`${url}/api/auth/update-details`, payload);
 
     } catch (error) {
       console.log(error)

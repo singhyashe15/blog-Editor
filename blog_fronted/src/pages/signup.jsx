@@ -37,7 +37,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post(`${serverUrl}/api/register`, user);
+      const res = await axios.post(`${serverUrl}/api/auth/register`, user);
 
       if (res.data.success === false) {
         toast.error(res.data.msg);
