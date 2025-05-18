@@ -1,10 +1,9 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Spinner, Text, Tag, TagCloseButton, TagLabel, Textarea, Image, Wrap, WrapItem, useDisclosure, Modal, ModalContent, ModalBody, ModalFooter, ModalOverlay, HStack, ModalCloseButton, ModalHeader } from '@chakra-ui/react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from "react-hot-toast";
 import uploadFile from '../helpers/uploadBlogImage.js';
-import { useNavigate } from 'react-router-dom';
 
 export default function BlogPost() {
   const [image, setImage] = useState(null);
@@ -14,11 +13,18 @@ export default function BlogPost() {
   const [tagInput, setTagInput] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Loading, setLoading] = useState(false);
-  const [draftLoading,setDraftLoading] = useState(false);
-  const navigate = useNavigate();
+  const [draftLoading, setDraftLoading] = useState(false);
+  const [user,setUser] = useState(null);
 
+  // stored user detail from localstorage
+  useEffect(()=>{
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if(storedUser){
+      setUser(storedUser)
+    }
+  })
   // upload image in cloudinary
-  const handleImageUpload =async (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const uploadPhoto = await uploadFile(file)
@@ -40,20 +46,20 @@ export default function BlogPost() {
   };
 
   // save blog as draft
-  const handleDraft = async() => {
+  const handleDraft = async () => {
     const draftBlog = {
-      image,title,content,tags,status:"draft"
+      image, title, content, tags, status: "draft",id:user?.id
     }
     try {
       setDraftLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
-      const res = await axios.post(`${url}/blog/save-draft`,draftBlog);
-      if(res.data.success){
+      const res = await axios.post(`${url}/blog/save-draft`, draftBlog);
+      if (res.data.success) {
         toast.success("Saved as draft");
       }
     } catch (error) {
-      
-    }finally{
+
+    } finally {
       setDraftLoading(false)
     }
   }
@@ -65,16 +71,16 @@ export default function BlogPost() {
   // publish the blog
   const pubishBlog = async () => {
     const postBlog = {
-      image,title,content,tags,status:"published"
+      image, title, content, tags, status: "published",id:user?.id
     }
     console.log(postBlog)
     try {
       setLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
-      
-      const res = await axios.post(`${url}/api/blogs/publish`,postBlog);
+
+      const res = await axios.post(`${url}/api/blogs/publish`, postBlog);
       console.log(res)
-      if(res.data.success){
+      if (res.data.success) {
         toast.success("Post added");
         setContent("");
         setTags([]);
@@ -84,7 +90,7 @@ export default function BlogPost() {
     } catch (error) {
       console.log(error)
       toast.error("Failed to publish blog. Please try again.");
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
@@ -183,9 +189,9 @@ export default function BlogPost() {
           <ModalHeader align="center" bg="gray.200" mt="8" rounded="full">Preview It</ModalHeader>
           <ModalBody>
             <Flex justify="center" align="center" direction="column">
-              <Image src='' />
-              <Text alignContent="center" mt="4">{title}</Text>
-              <Wrap mt={2}>
+              <Image src={image} alt="blog_image" />
+              <Text alignContent="center" mt="4" fontSize="xl" fontWeight="semibold">Title : {title}</Text>
+              <Wrap mt={4}>
                 {tags.map((tag) => (
                   <WrapItem key={tag}>
                     <Tag
@@ -201,16 +207,19 @@ export default function BlogPost() {
                   </WrapItem>
                 ))}
               </Wrap>
-              <Text mt="4">{content}</Text>
+              <Text mt="8" fontSize="lg" fontWeight="semibold">{content}</Text>
             </Flex>
-            <ModalFooter justify="center" align="center">
-                <Button colorScheme='teal'
-                  disabled={Loading}
-                  leftIcon={Loading && <Spinner size="md" />}
-                  type='submit'
-                  onClick={() => pubishBlog()} >
-                  {Loading ? "Publishing" : "Publish Now"}</Button>
-            </ModalFooter>
+            <HStack justify="space-between" align="center" mt="8" >
+              <Button colorScheme='teal' onClick={() => onClose()}>
+                Back
+              </Button>
+              <Button colorScheme='teal'
+                disabled={Loading}
+                leftIcon={Loading && <Spinner size="md" />}
+                type='submit'
+                onClick={() => pubishBlog()} >
+                {Loading ? "Publishing" : "Publish Now"}</Button>
+            </HStack>
           </ModalBody>
         </ModalContent>
       </Modal>
