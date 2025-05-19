@@ -1,11 +1,13 @@
-import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Button,  HStack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // clear the localStorage
     localStorage.setItem('user', null);
+    navigate('/',{replace:true})
   }
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="auto" width="auto">

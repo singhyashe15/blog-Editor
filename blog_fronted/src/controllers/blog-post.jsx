@@ -83,7 +83,7 @@ export default function BlogPost() {
       setDraftLoading(false)
     }
   }
-
+  // enter title,tag,content
   const handleChange = (e)=>{
     const {name,value} = e.target;
     if(name === 'title'){
@@ -91,7 +91,7 @@ export default function BlogPost() {
     }else if(name === "content"){
       setContent(value);
     }else if(name === 'tags'){
-      setTags(value);
+      setTagInput(value);
     }
    
     if (timeoutId) clearTimeout(timeoutId);

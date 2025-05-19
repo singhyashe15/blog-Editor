@@ -2,7 +2,7 @@ import { Heading, Image, Stack, Text, Box, Flex, Wrap, WrapItem, Tag, TagLabel }
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom"
-
+import moment from "moment"
 export default function ReadBlog() {
   const { id } = useParams();
 
@@ -10,12 +10,12 @@ export default function ReadBlog() {
   const getBlogById = async () => {
     console.log(id)
     const url = import.meta.env.VITE_SERVER_URL;
-    const res = await axios.get(`${url}/blog/${id}`);
+    const res = await axios.get(`${url}/api/blogs/${id}`);
     console.log(res.data);
     return res.data.success ? res.data.post : [];
   }
   const { data } = useQuery({
-    queryKey: "blogId",
+    queryKey: ["blogId"],
     queryFn: getBlogById,
     staleTime: 1000
   })
@@ -25,7 +25,7 @@ export default function ReadBlog() {
       {/*BLog Image */}
       <Box w="100%" h="250px" overflow="hidden" rounded="md">
         <Image
-          src=""
+          src={data?.blog.rows[0].imageurl}
           alt="Blog cover"
           objectFit="cover"
           w="100%"
@@ -35,13 +35,13 @@ export default function ReadBlog() {
 
       {/* Author and Date */}
       <Flex justify="space-between" align="center" color="gray.600" fontSize="sm">
-        <Text fontWeight="medium">Ravi Sharma</Text>
-        <Text>Published on: 28-05-2025</Text>
+        <Text fontWeight="medium">{data?.user?.rows[0]?.name}</Text>
+        <Text>Published on: {moment(data?.blog.rows[0]?.updated_at).format("DD-MM-YYYY")}</Text>
       </Flex>
 
       {/* Tags */}
       <Wrap mt={2}>
-        {["computer", "ai"]?.map((tag) => (
+        {data?.blog.rows[0]?.tags?.map((tag) => (
           <WrapItem key={tag}>
             <Tag
               size="md"
@@ -56,10 +56,9 @@ export default function ReadBlog() {
       </Wrap>
       {/* Content */}
 
-      <Heading size="md" mb={2} float="left">Artificial Intelligence</Heading>
+      <Heading size="md" mb={2} float="left">{data?.blog?.rows[0].title}</Heading>
       <Text float="left">
-        How AI is capturing the minds of young youth around the world, influencing decisions,
-        creativity, and productivity like never before. i am yashraj singh b.teh of academy of technology
+        {data?.blog?.rows[0].content}
       </Text>
 
     </Stack>

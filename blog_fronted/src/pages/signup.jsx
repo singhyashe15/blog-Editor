@@ -10,6 +10,7 @@ const Register = () => {
   const [hide, setHide] = useState(false)
   const navigate = useNavigate();
 
+  // insert details
   const handlechange = (e) => {
     console.log(e.target.value)
     setUser((prev) => {
@@ -19,7 +20,7 @@ const Register = () => {
       }
     })
   }
-
+  // toggle seen password
   const toggle = (field) => {
     setHide((prev) => ({
       ...prev,
@@ -27,13 +28,14 @@ const Register = () => {
     }));
   };
 
+  // submit the record
   const handleSubmit = async (e) => {
     e.preventDefault();
     const serverUrl = import.meta.env.VITE_SERVER_URL;
     const { name, email, password } = user;
 
-    if (!name || !email || !password) {
-      return toast.error("Please fill all required fields.");
+    if (!name || !email || !password) { // if some record not fill then display the message
+      return toast.error("Fill all required fields.");
     }
 
     try {
@@ -81,7 +83,7 @@ const Register = () => {
             </InputGroup>
 
           </FormControl>
-          <Button
+          <Button //submit button
             m="4"
             colorScheme='teal'
             type='submit' >
@@ -89,7 +91,7 @@ const Register = () => {
           </Button>
         </form>
       </Box>
-      <Text>Already have an account ? <Link href='/login'>Sign in here</Link></Text>
+      <Text mt="8">Already have an account ? <Link href='/login'>Sign in here</Link></Text>
     </Box>
   )
 };

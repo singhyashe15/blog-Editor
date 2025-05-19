@@ -24,6 +24,7 @@ export default function Profile() {
     }
   }, []);
 
+  // add link like youtube,instagram ,...
   const handleLink = (e) => {
     const { name, value } = e.target;
     setUpdateDetail((prev) => ({
@@ -31,7 +32,7 @@ export default function Profile() {
       [name]: value,
     }))
   }
-
+  // add the bio 
   const handleBio = (e) => {
     const { name, value } = e.target;
     console.log(name + " " + value)
@@ -40,10 +41,10 @@ export default function Profile() {
       [name]: value,
     }))
   }
-
+  // handle the update details logic 
   const handleupdate = async (e) => {
     // e.preventDefault();
-    console.log(updateDetail)
+    
     try {
       const url = import.meta.env.VITE_SERVER_URL;
       const updatedres = await axios.post(`${url}/api/auth/update-details`, updateDetail);
