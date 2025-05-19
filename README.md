@@ -88,3 +88,4 @@ npm run dev
 | POST   | `/api/auth/register`                 | Register user         |
 | POST   | `/api/auth/login`                    | Login user            |
 | PUT    | `/api/auth/update-details`           | Update user details   |
+| PUT    | `/api/blogs/edit/:id     `           | edit blog details     |   
