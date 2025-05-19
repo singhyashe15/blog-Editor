@@ -5,6 +5,7 @@ import draftBLog from "../controllers/draftBlog.js";
 import getBlogbycategory from "../controllers/getBlogbycategory.js";
 import getAllBlogs from "../controllers/getAllBlog.js";
 import getselfBlog from "../controllers/getselfBlog.js";
+import EditBlog from "../controllers/editBlog.js";
 
 const blogRouter = express.Router();
 
@@ -20,5 +21,6 @@ blogRouter.get('/:id' ,getBlog );
 blogRouter.get('/self/:id',getselfBlog);
 // get blog by category
 blogRouter.get("/category/:search",getBlogbycategory);
-
+// updated the edited blog
+blogRouter.put("/edit/:id",EditBlog) 
 export default blogRouter;
