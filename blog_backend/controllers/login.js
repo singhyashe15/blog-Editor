@@ -5,12 +5,12 @@ import jwt from "jsonwebtoken";
 const Login = async (req, res) => {
   try {
     const user = await req.body;
-    
+    // checking email exist or not
     const Found = await pool.query("SELECT * FROM USERS WHERE EMAIL=$1", [user.email]);
     if (Found.rows.length === 0) {
       return res.status(404).json({ msg: "Invalid Credentials" ,success:false});
     }
-
+    // decrypting the password
     const hpass = await bcrypt.compare(user.password, Found.rows[0].password);
     if (hpass === false) {
       return res.status(404).json({ msg: "Invalid Password",success:false });
@@ -20,9 +20,9 @@ const Login = async (req, res) => {
       name: Found.rows[0].name,
       id: Found.rows[0].id
     }
-    console.log(token_data)
+    // generating authentication
     const token = jwt.sign(token_data, process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
-    console.log(token)
+  
     const cookieOptions = {
       http: true,
       secure: true,
@@ -30,6 +30,7 @@ const Login = async (req, res) => {
     }
     return res.cookie('token', token, cookieOptions).status(200).json({
       message: "Login successfully",
+      data:token_data,
       token: token,
       success: true
     })
