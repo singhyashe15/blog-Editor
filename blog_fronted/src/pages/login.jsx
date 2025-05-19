@@ -43,7 +43,7 @@ export default function Login() {
       const res = await axios.post(`${url}/api/auth/login`, user);
       if (res.data.success) {
         toast.success(res.data.message);
-        localStorage.setItem('user',res.data.data) //setting user_info
+        localStorage.setItem('user',JSON.stringify(res.data.data)) //setting user_info
         navigate('/', { replace: true }) //navigating to home
       }
 
