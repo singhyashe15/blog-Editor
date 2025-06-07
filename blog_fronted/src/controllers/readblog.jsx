@@ -1,10 +1,29 @@
-import { Heading, Image, Stack, Text, Box, Flex, Wrap, WrapItem, Tag, TagLabel } from "@chakra-ui/react";
+import { Heading, IconButton, Input, Stack, Text, Box, Flex, Wrap, WrapItem, Tag, TagLabel, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, useDisclosure, InputGroup, InputRightElement, Avatar, Image, Center } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom"
 import moment from "moment"
+import { useRef, useState } from "react";
+import { FaPaperPlane, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { useSocket } from "../context/socket.jsx";
+import { useEffect } from "react";
 export default function ReadBlog() {
+
+  const [profile, setProfile] = useState("");
+  const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
+  const [liked,setLiked] = useState(-1);
+  const [unliked,setunLiked] = useState(-1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const socket = useSocket();
+  const btnRef = useRef()
   const { id } = useParams();
+
+  // set the name of user
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setProfile(storedUser);
+  }, [])
 
   // get the post by id
   const getBlogById = async () => {
@@ -14,11 +33,63 @@ export default function ReadBlog() {
     console.log(res.data);
     return res.data.success ? res.data.post : [];
   }
+
   const { data } = useQuery({
     queryKey: ["blogId"],
     queryFn: getBlogById,
-    staleTime: 1000
+    staleTime: 100000
   })
+
+
+  // socket logic
+  useEffect(() => {
+    console.log("eo")
+    if (socket) {
+      console.log(socket.connected)
+      socket.emit('room', id); // using blog.id as a room for real time communication
+      // getting all the comment
+      socket.emit('send-comment',id);
+      // getting the broadcasted comment
+      socket.on('all-comment', (comment) => {
+        setAllComments(comment)
+      });
+
+      // if(liked !== -1){
+      //   socket.emit('setLike',)
+      // }
+    }
+  }, [socket,id])
+
+  // handling the comment
+  const handleComment = (e) => {
+    const { value } = e.target;
+
+    setComment(value)
+
+  }
+
+  const submitComment = async () => {
+    //  sending the comment in real time
+    if (comment && socket.connected) {
+      console.log("enter")
+      socket.emit('comment', {
+        roomId: id,
+        sender: profile.name,
+        sender_id: profile.id,
+        comment
+      });
+
+      setComment("")
+    }
+  }
+
+  const handleKey = (e) => {
+    if(e.key === 'Enter'){
+      console.log("enter")
+      submitComment();
+    }
+  }
+
 
   return (
     <Stack spacing={6} direction="column" p={6} mx="8" mt={8} shadow="lg" rounded="xl" bg="white">
@@ -35,8 +106,8 @@ export default function ReadBlog() {
 
       {/* Author and Date */}
       <Flex justify="space-between" align="center" color="gray.600" fontSize="sm">
-        <Text fontWeight="medium">{data?.user?.rows[0]?.name}</Text>
-        <Text>Published on: {moment(data?.blog.rows[0]?.updated_at).format("DD-MM-YYYY")}</Text>
+        <Text fontWeight="medium">{data?.user?.rows[0]?.name || "Title"}</Text>
+        <Text>Published on: {moment(data?.blog.rows[0]?.updated_at).format("DD-MM-YYYY") || "23:05"}</Text>
       </Flex>
 
       {/* Tags */}
@@ -54,13 +125,101 @@ export default function ReadBlog() {
           </WrapItem>
         ))}
       </Wrap>
-      {/* Content */}
+
+
+      <Button ref={btnRef} colorScheme='teal' onClick={onOpen} w="36">
+        Add a Comment..
+      </Button>
+      <Divider size="md" />
 
       <Heading size="md" mb={2} float="left">{data?.blog?.rows[0].title}</Heading>
       <Text float="left">
         {data?.blog?.rows[0].content}
       </Text>
+      {/* } */}
 
+      {/* For Comment Section */}
+      <Drawer
+        isOpen={isOpen}
+        placement='right'
+        onClose={onClose}
+        finalFocusRef={btnRef}
+        size="xl"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Comment Section</DrawerHeader>
+
+          <DrawerBody>
+            {
+              allComments.map((comment) => {
+                return (
+                  <Flex key={comment.id} mt='4' justify="flex-end" align="flex-start" ml={comment.sender_id === profile.id ? '26' : 'auto'}>
+                    <Avatar size="sm" cursor="pointer" mt="4" mr="2"></Avatar>
+                    <Flex shadow="md" rounded="xl" p="2" direction="column" >
+                      <Text color="gray.400">{comment.sender}</Text>
+                      <Text>
+                        {comment.comment}
+                      </Text>
+                      <Box display="flex" m="2">
+                        <IconButton
+                          aria-label="Like"
+                          icon={<FaThumbsUp />}
+                          onClick={() => {setLiked(comment.id);setunLiked(-1)}}
+                          color={liked === comment.id ? 'red.300' : 'gray.400'}
+                          border="2px"
+                          borderColor='gray.300'
+                          borderRadius="full"
+                          bg="transparent"
+                          mx="2"
+                          _hover={{
+                            bg: 'gray.100',
+                          }}
+                          _active={{
+                            bg: 'gray.200',
+                          }}
+                        />
+                        <IconButton
+                          aria-label="unLike"
+                          icon={<FaThumbsDown />}
+                          onClick={() => {setunLiked(comment.id);setLiked(-1)}}
+                          color={unliked === comment.id  ? 'red.300' : 'gray.400'}
+                          border="2px"
+                          borderColor='gray.300'
+                          borderRadius="full"
+                          bg="transparent"
+                          _hover={{
+                            bg: 'gray.100',
+                          }}
+                          _active={{
+                            bg: 'gray.200',
+                          }}
+                        />
+                      </Box>
+                    </Flex>
+                  </Flex>
+                )
+              })
+            }
+            {
+              allComments.length === 0 &&
+              <Center>
+                <Text>No Comment yet!!</Text>
+              </Center>
+            }
+          </DrawerBody>
+
+          <DrawerFooter>
+            <InputGroup>
+              <InputRightElement cursor="pointer" onClick={submitComment}>
+                <FaPaperPlane />
+              </InputRightElement>
+              <Input placeholder='Type here...' value={comment} name="comment" onChange={handleComment} onKeyDown={handleKey} autoComplete="off" />
+            </InputGroup>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </Stack>
 
   )
