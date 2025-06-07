@@ -47,7 +47,12 @@ const Register = () => {
           id: res.data.id,
           name: res.data.name
         }
+
         localStorage.setItem("user", JSON.stringify(user_info))
+
+        localStorage.setItem("user", JSON.stringify(user_info));
+        navigate("/login", { replace: true })
+
       }
     } catch (error) {
       toast.error(error.response.data.msg)
