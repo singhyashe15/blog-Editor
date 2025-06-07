@@ -94,7 +94,7 @@ export default function Home() {
               return (
                 <StackComponent key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
                   <Box w="40%">
-                    <Image src={blog?.imageUrl} alt="pic" />
+                    <Image src={blog?.imageurl} alt="pic" />
                   </Box>
                   <VStack align="start" w="auto" alignItems="center">
                     <Text fontWeight="semibold">{blog?.title}</Text>

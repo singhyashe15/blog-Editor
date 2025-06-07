@@ -132,7 +132,7 @@ export default function Dashboard() {
                   return (
                     <HStack key={blog?.id} spacing="8" rounded="xl"  bg="gray.100" px="4" py="8" mt="4" width="100%">
                       <Box w="40%">
-                        <Image src={blog.imageUrl} alt="pic" />
+                        <Image src={blog.imageurl} alt="pic" />
                       </Box>
                       <VStack align="start" w="auto" alignItems="center">
                         <Text fontWeight="semibold">{blog?.title}</Text>
@@ -156,7 +156,7 @@ export default function Dashboard() {
                   return (
                     <HStack key={blog?.id} spacing="8" rounded="xl" bg="gray.100" px="4" py="8" mt="4" justify="center" align="center" width="100%">
                       <Box w="40%">
-                        <Image src={blog?.imageUrl} alt="pic" />
+                        <Image src={blog?.imageurl} alt="pic" />
                       </Box>
                       <VStack align="start" w="auto" alignItems="center">
                         <Text fontSize="xl" fontWeight="semibold">{blog?.title}</Text>
