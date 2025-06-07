@@ -3,12 +3,10 @@ import { Box, FormControl, Input, Text, InputGroup,InputLeftElement, InputRightE
 import { FaEyeSlash, FaEye, FaEnvelope, FaKey } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [user, setUser] = useState({ name: "", email: "", role: "" })
   const [hide, setHide] = useState(false)
-  const navigate = useNavigate();
 
   // insert details
   const handlechange = (e) => {
@@ -49,8 +47,7 @@ const Register = () => {
           id: res.data.id,
           name: res.data.name
         }
-        localStorage.setItem("user", user_info)
-        navigate("/login", { replace: true })
+        localStorage.setItem("user", JSON.stringify(user_info))
       }
     } catch (error) {
       toast.error(error.response.data.msg)
