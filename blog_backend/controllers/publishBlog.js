@@ -3,9 +3,7 @@ import pool from "../config/db.js";
 const publishBlog = async (req,res) => {
   try {
     const blog = req.body;
-   
-    const published = await pool.query("INSERT INTO BLOG (title,content,tags,status,imageUrl,userId) VALUES ($1,$2,$3,$4,$5) RETURNING *", [blog.title,blog.content,JSON.stringify(blog.tags),blog.status,blog.image,blog.id]);
-    
+    const published = await pool.query("INSERT INTO BLOG (title,content,tags,status,imageUrl,userId) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *", [blog.title,blog.content,JSON.stringify(blog.tags),blog.status,blog.image,blog.id]);
     if(published.rowCount){
       return res.status(201).json({msg:"blog publised", success : true});
     }

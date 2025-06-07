@@ -14,6 +14,7 @@ const Transporter = createTransport({
   },
 })
 const sendEmail = async (name, email) => {
+  const frontend_url = process.env.FRONTED_URL;
   try {
     const info = Transporter.sendMail({
       from: process.env.EMAIL_USER, // sender address
@@ -27,7 +28,13 @@ const sendEmail = async (name, email) => {
                 <li>📚 Discover inspiring content</li>
                 <li>💬 Connect with the community</li>
               </ul>
-              <p>If you ever need help, feel free to reply to this email.</p>`
+              <p>Please click below for Login purpose</p>
+              <a href="${frontend_url}/login" 
+                style="display: inline-block; padding: 10px 20px; font-size: 16px; 
+                color: #fff; background-color: #4CAF50; text-decoration: none; 
+                border-radius: 5px; font-weight: bold;">
+              Login Here
+              </a>`
     });
     return { info, success: true };
   } catch (error) {

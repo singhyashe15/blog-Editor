@@ -16,9 +16,9 @@ const userTable = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log("✅ User Table Created Successfully");
+    console.log("User Table Created Successfully");
   } catch (err) {
-    console.error("❌ Error Creating User Table:", err);
+    console.error("Error Creating User Table:", err);
   }
 };
 

@@ -15,9 +15,9 @@ const BlogSchema = async () => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
 `);
-    console.log("✅ Blog Table Created Successfully");
+    console.log("Blog Table Created Successfully");
   } catch (err) {
-    console.error("❌ Error Creating Blog Table:", err);
+    console.error("Error Creating Blog Table:", err);
   }
 }
 
