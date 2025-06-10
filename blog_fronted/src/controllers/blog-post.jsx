@@ -11,6 +11,7 @@ export default function BlogPost() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
+  const [contentLength,setContentLength] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [Loading, setLoading] = useState(false);
   const [draftLoading, setDraftLoading] = useState(false);
@@ -27,13 +28,13 @@ export default function BlogPost() {
   }, [])
 
   // for 30sec interval saving the post as draft
-  useEffect(() => {
-    saveIntervalRef.current = setInterval(() => {
-      handleDraft();
-    }, 5000); // 5 seconds
+  // useEffect(() => {
+  //   saveIntervalRef.current = setInterval(() => {
+  //     handleDraft();
+  //   }, 5000); // 5 seconds
 
-    return () => clearInterval(saveIntervalRef.current);
-  }, []);
+  //   return () => clearInterval(saveIntervalRef.current);
+  // }, []);
 
   // upload image in cloudinary
   const handleImageUpload = async (e) => {
@@ -89,18 +90,19 @@ export default function BlogPost() {
     if(name === 'title'){
       setTitle(value);
     }else if(name === "content"){
+      setContentLength(value.length);
       setContent(value);
     }else if(name === 'tags'){
       setTagInput(value);
     }
    
-    if (timeoutId) clearTimeout(timeoutId);
+    // if (timeoutId) clearTimeout(timeoutId);
 
-    const id = setTimeout(() => {
-      handleDraft();
-    }, 30000);
+    // const id = setTimeout(() => {
+    //   handleDraft();
+    // }, 30000);
 
-    setTimeoutId(id);
+    // setTimeoutId(id);
   }
 
   // open preview section
@@ -113,7 +115,7 @@ export default function BlogPost() {
     const postBlog = {
       image, title, content, tags, status: "published", id: user?.id
     }
-    console.log(postBlog)
+    
     try {
       setLoading(true);
       const url = import.meta.env.VITE_SERVER_URL;
@@ -176,6 +178,10 @@ export default function BlogPost() {
             onChange={handleChange}
             rows={6}
           />
+          <Flex justify="space-between">
+            <Text color="red.400">{contentLength > 255 && "Length cannot exceed 255"}</Text>
+            <Text>{contentLength} / 255</Text>
+          </Flex>
         </FormControl>
 
         <FormControl mb={4}>

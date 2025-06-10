@@ -32,7 +32,7 @@ function App() {
   // write a post
   const handlePost = () => {
     if (user) {
-      navigate('/blog-post', { replace: true })
+      navigate('/blog-post')
     } else {
       toast("Login First");
     }

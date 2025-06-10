@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Divider, Flex, HStack, VStack, Stack, Text, useBreakpointValue, Image } from "@chakra-ui/react";
+import { Avatar, Box, Button, Divider, Flex, HStack, VStack, Stack, Text, useBreakpointValue, Image, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from "react-router-dom";
@@ -38,6 +38,7 @@ export default function Home() {
         }
       }
     }
+    console.log(search)
     getPosts();
 
   }, [search]);
@@ -49,7 +50,7 @@ export default function Home() {
     return res.data.success ? res.data.allBlogs.rows : [];
   }
   // get all recent post
-  const { data } = useQuery({
+  const { data , isLoading } = useQuery({
     queryKey: "posts",
     queryFn: getAllPosts,
     staleTime:10000
@@ -98,6 +99,7 @@ export default function Home() {
                   </Box>
                   <VStack align="start" w="auto" alignItems="center">
                     <Text fontWeight="semibold">{blog?.title}</Text>
+                    <Text fontWeight="hairline">{blog?.content.split(" ").slice(0, 10).join(" ")}...</Text>
                     <Button colorScheme="teal" variant="solid" onClick={() => handleRead(blog?.id)}>Read more!</Button>
                   </VStack>
                 </StackComponent>
@@ -108,17 +110,21 @@ export default function Home() {
               return (
                 <StackComponent key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
                   <Box w="40%">
-                    <Image src={blog?.imageUrl} alt="pic" />
+                    <Image src={blog?.imageurl} alt="pic" />
                   </Box>
                   <VStack align="start" w="auto" alignItems="center">
                     <Text fontWeight="semibold">{blog?.title}</Text>
+                     <Text fontWeight="hairline">{blog?.content.split(" ").slice(0, 10).join(" ")}...</Text>
                     <Button colorScheme="teal" variant="solid" onClick={() => handleRead(blog?.id)}>Read more!</Button>
                   </VStack>
                 </StackComponent>
               )
             }) :
               <Text>
-                {msg}
+                {
+                  isLoading ? 
+                  <Spinner size="md"></Spinner> : {msg}
+                }
               </Text>
           }
         </VStack>

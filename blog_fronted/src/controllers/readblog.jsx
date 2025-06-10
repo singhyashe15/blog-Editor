@@ -156,7 +156,7 @@ export default function ReadBlog() {
                         {comment.comment}
                       </Text>
                       {toggle === comment.id &&
-                        <Flex p="2" bg="white" shadow="md" rounded="full" position="absolute" ml={comment.sender_id === Number(profile.id) ? "-40" : "24"} >
+                        <Flex p="2" bg="white" shadow="md" rounded="full" position="absolute" ml={comment.sender_id === Number(profile.id) ? "-36" : "0"} >
                           {[<FaThumbsUp />, <FaThumbsDown />, <FaHeart />, <FaLightbulb />].map((icon,index) => {
                             return (
                               <IconButton
