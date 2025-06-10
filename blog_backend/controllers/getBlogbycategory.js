@@ -3,7 +3,6 @@ import pool from "../config/db.js"
 const getBlogbycategory = async (req, res) => {
   try {
     const category = req.params.search;
-
     const blogbyCategory = await pool.query(`
       SELECT title, content, tags, imageurl 
       FROM blog 
@@ -11,8 +10,7 @@ const getBlogbycategory = async (req, res) => {
       AND EXISTS (
       SELECT 1 FROM jsonb_array_elements_text(tags) AS tag
       WHERE tag ILIKE '%' || $1 || '%'
-      )`, [JSON.stringify([category])]);
-
+      )`, [category]);
     res.status(201).json({ blogbyCategory, success: true });
   } catch (error) {
     console.log(error)
