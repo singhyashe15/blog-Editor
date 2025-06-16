@@ -41,7 +41,7 @@ function App() {
   return (
     <>
       {/* navbar */}
-      <HStack w="100%" justify="space-between" px="8"  position="fixed" bg="white" top="0" left="0" py="4">
+      <HStack w="100%" justify="space-between" px="8"  position="fixed" bg="white" top="0" left="0" py="4" zIndex="999">
         {/* Left Side */}
         <HStack align="start" spacing="3">
           <Text fontSize="2xl" fontWeight="bold">Blog</Text>
