@@ -37,11 +37,11 @@ function App() {
       toast("Login First");
     }
   }
-
+// px={{ base: "4", md: "0" }}
   return (
     <>
       {/* navbar */}
-      <HStack w="100%" justify="space-between" px={{ base: "4", md: "0" }}>
+      <HStack w="100%" justify="space-between" px="8"  position="fixed" bg="white" top="0" left="0" py="4">
         {/* Left Side */}
         <HStack align="start" spacing="3">
           <Text fontSize="2xl" fontWeight="bold">Blog</Text>

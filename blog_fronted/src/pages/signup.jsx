@@ -5,12 +5,11 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const Register = () => {
-  const [user, setUser] = useState({ name: "", email: "", role: "" })
+  const [user, setUser] = useState({ name: "", email: "", password: "" })
   const [hide, setHide] = useState(false)
 
   // insert details
   const handlechange = (e) => {
-    console.log(e.target.value)
     setUser((prev) => {
       return {
         ...prev,
@@ -42,17 +41,9 @@ const Register = () => {
       if (res.data.success === false) {
         toast.error(res.data.msg);
       } else {
-        toast.success(res.data.msg)
-        const user_info = {
-          id: res.data.id,
-          name: res.data.name
-        }
-
-        localStorage.setItem("user", JSON.stringify(user_info))
-
-        localStorage.setItem("user", JSON.stringify(user_info));
-        navigate("/login", { replace: true })
-
+        toast.success(res.data.msg);
+        toast.success("Check Out your Email")
+        setUser({name:"", email:"", password:""}); // clear the details
       }
     } catch (error) {
       toast.error(error.response.data.msg)

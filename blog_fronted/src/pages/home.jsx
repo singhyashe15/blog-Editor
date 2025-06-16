@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Divider, Flex, HStack, VStack, Stack, Text, useBreakpointValue, Image, Spinner } from "@chakra-ui/react";
+import { Avatar, Box, Button, Divider, Flex, HStack, VStack, Stack, Text, useBreakpointValue, Image } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from "react-router-dom";
@@ -8,8 +8,8 @@ import { useBlog } from "../context/blogcontext.jsx";
 
 export default function Home() {
   const [blog, setBlog] = useState([])
-  const [user,setUser] = useState(null)
-  const [msg,setMsg] = useState(null)
+  const [user, setUser] = useState(null)
+  const [msg, setMsg] = useState(null)
   const StackComponent = useBreakpointValue({ base: VStack, md: HStack })
   const CategoryComponent = useBreakpointValue({ base: HStack, md: VStack })
   const { search, setSearch } = useBlog();
@@ -31,10 +31,11 @@ export default function Home() {
       const res = await axios.get(`${url}/api/blogs/category/${search}`);
       console.log(res)
       if (res.data.success) {
-        if(res.data.blogbyCategory.rows.length > 0){
+        if (res.data.blogbyCategory.rowCount > 0) {
+          setMsg(null);
           setBlog(res.data.blogbyCategory.rows)
-        }else{
-          setMsg("No published right now!!")
+        } else {
+          setMsg("Not published right now.Be the first One to publish")
         }
       }
     }
@@ -50,10 +51,10 @@ export default function Home() {
     return res.data.success ? res.data.allBlogs.rows : [];
   }
   // get all recent post
-  const { data , isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: "posts",
     queryFn: getAllPosts,
-    staleTime:10000
+    staleTime: 10000
   })
 
   const handleCategory = (category) => {
@@ -106,25 +107,22 @@ export default function Home() {
               )
             })
             :
-            msg === null ? blog?.map((blog) => {
+            (msg === null) ? blog?.map((blog) => {
               return (
                 <StackComponent key={blog?.id} spacing="8" rounded="xl" w="75%" bg="gray.100" px="4" py="8">
                   <Box w="40%">
-                    <Image src={blog?.imageurl} alt="pic" />
+                    {blog?.imageurl && <Image src={blog?.imageurl} alt="pic" />}
                   </Box>
                   <VStack align="start" w="auto" alignItems="center">
                     <Text fontWeight="semibold">{blog?.title}</Text>
-                     <Text fontWeight="hairline">{blog?.content.split(" ").slice(0, 10).join(" ")}...</Text>
+                    <Text fontWeight="hairline">{blog?.content.split(" ").slice(0, 10).join(" ")}...</Text>
                     <Button colorScheme="teal" variant="solid" onClick={() => handleRead(blog?.id)}>Read more!</Button>
                   </VStack>
                 </StackComponent>
               )
             }) :
-              <Text>
-                {
-                  isLoading ? 
-                  <Spinner size="md"></Spinner> : {msg}
-                }
+              <Text fontSize="xl" fontWeight="medium">
+                {msg}
               </Text>
           }
         </VStack>
