@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom"
 import moment from "moment"
 import { useRef, useState } from "react";
-import { FaPaperPlane, FaThumbsUp, FaThumbsDown, FaHeart, FaLightbulb, FaLaugh } from "react-icons/fa";
+import { FaPaperPlane } from "react-icons/fa";
 import { useSocket } from "../context/socket.jsx";
 import { useEffect } from "react";
 export default function ReadBlog() {
@@ -12,8 +12,8 @@ export default function ReadBlog() {
   const [profile, setProfile] = useState("");
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-  const [icon, setIcon] = useState(null);
-  const [toggle, setToggle] = useState(-1);
+  // const [icon, setIcon] = useState(null);
+  // const [toggle, setToggle] = useState(-1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const socket = useSocket();
   const btnRef = useRef()
@@ -80,22 +80,22 @@ export default function ReadBlog() {
     }
   }
 
-  const handleIcon = (icon) => {
-    setIcon(icon);
-    setToggle(toggle*10);
-  }
+  // const handleIcon = (icon) => {
+  //   setIcon(icon);
+  //   setToggle(toggle * 10);
+  // }
 
   return (
     <Stack spacing={6} direction="column" p={6} mx="8" mt={8} shadow="lg" rounded="xl" bg="white">
       {/*BLog Image */}
       <Box w="100%" h="250px" overflow="hidden" rounded="md">
-        <Image
+        {data?.blog.rows[0].imageurl !== null && <Image
           src={data?.blog.rows[0].imageurl}
           alt="Blog cover"
           objectFit="cover"
           w="100%"
           h="100%"
-        />
+        />}
       </Box>
 
       {/* Author and Date */}
@@ -155,9 +155,9 @@ export default function ReadBlog() {
                       <Text my="2">
                         {comment.comment}
                       </Text>
-                      {toggle === comment.id &&
+                      {/* {toggle === comment.id &&
                         <Flex p="2" bg="white" shadow="md" rounded="full" position="absolute" ml={comment.sender_id === Number(profile.id) ? "-36" : "0"} >
-                          {[<FaThumbsUp />, <FaThumbsDown />, <FaHeart />, <FaLightbulb />].map((icon,index) => {
+                          {[<FaThumbsUp />, <FaThumbsDown />, <FaHeart />, <FaLightbulb />].map((icon, index) => {
                             return (
                               <IconButton
                                 key={index}
@@ -201,7 +201,7 @@ export default function ReadBlog() {
                           />
 
                           : "Like"}
-                      </Text>
+                      </Text> */}
                     </Flex>
                   </Flex>
                 )
