@@ -69,6 +69,7 @@ export default function Profile() {
           spacing={6}
           justify="space-between"
           flexWrap="wrap"
+          mt={8}
         >
           <InputGroup maxW={inputWidth}>
             <InputLeftElement pointerEvents="none" color="gray.500" children={<FaUserCircle />} />
