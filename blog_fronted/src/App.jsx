@@ -7,19 +7,16 @@ import { useBlog } from "./context/blogcontext.jsx";
 import './App.css';
 
 function App() {
-  const [user,setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const { search, setSearch } = useBlog();
-  const [isExist, setIsExist] = useState(false);
   const location = useLocation()
   const navigate = useNavigate()
-  
 
   // get the user details
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
       setUser(storedUser)
-      setIsExist(true)
     }
   }, []);
 
@@ -37,11 +34,11 @@ function App() {
       toast("Login First");
     }
   }
-// px={{ base: "4", md: "0" }}
+  // px={{ base: "4", md: "0" }}
   return (
     <>
       {/* navbar */}
-      <HStack w="100%" justify="space-between" px="8"  position="fixed" bg="white" top="0" left="0" py="4" zIndex="999">
+      <HStack w="100%" justify="space-between" px="8" position="fixed" bg="white" top="0" left="0" py="4" zIndex="999">
         {/* Left Side */}
         <HStack align="start" spacing="3">
           <Text fontSize="2xl" fontWeight="bold">Blog</Text>
@@ -67,7 +64,7 @@ function App() {
             />
           )
           }
-          {isExist ? (
+          {user !== null && (
             <Menu>
               <MenuButton as={Button} rightIcon={<FaUserCircle />}>
                 {/* You can put username here if needed */}
@@ -84,13 +81,16 @@ function App() {
                 </MenuItem>
               </MenuList>
             </Menu>
-          ) : (
-            !['/login', '/register'].includes(location.pathname) && (
+          )
+          }
+          {
+            !['/login', '/register'].includes(location.pathname) && user === null && (
               <Button colorScheme="teal" onClick={() => navigate('/login')}>
                 Login
               </Button>
             )
-          )}
+          }
+
         </HStack>
       </HStack>
       <Outlet />

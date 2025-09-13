@@ -15,7 +15,7 @@ export default function Logout() {
         <Text fontSize="lg" fontWeight="semibold">Are you sure want to logout!!</Text>
         <HStack display="flex" justifyContent="center" alignItems="center">
           <Button colorScheme="teal" variant="solid" onClick={() => navigate('/', { replace: true })}>Back</Button>
-          <Button colorScheme="teal" variant="solid" onClick={handleLogout()}>Logout</Button>
+          <Button colorScheme="teal" variant="solid" onClick={()=>handleLogout()}>Logout</Button>
         </HStack>
       </Box>
     </Box>
