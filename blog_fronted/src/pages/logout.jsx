@@ -7,7 +7,7 @@ export default function Logout() {
   const handleLogout = () => {
     // clear the localStorage
     localStorage.setItem('user', null);
-    navigate('/',{replace:true})
+    navigate('/register',{replace:true})
   }
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="auto" width="auto">
