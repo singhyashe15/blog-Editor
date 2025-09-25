@@ -33,7 +33,6 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = user;
-    
     if (!email || !password) {
       return toast.error("Fill all required fields.");
     }
@@ -43,7 +42,7 @@ export default function Login() {
       const res = await axios.post(`${url}/api/auth/login`, user);
       if (res.data.success) {
         toast.success(res.data.message);
-        localStorage.setItem('user',JSON.stringify(res.data.data)) //setting user_info
+        localStorage.setItem('user', JSON.stringify(res.data.data)) //setting user_info
         navigate('/', { replace: true }) //navigating to home
       }
 
@@ -56,9 +55,9 @@ export default function Login() {
 
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="8">
-      <Text fontStyle="italic" fontSize="2xl" fontFamily="cursive" >Welcome Back</Text>
+      <Text fontStyle="italic" fontSize="2xl" fontFamily="cursive" >Welcome to Blog Editor</Text>
       <Box width={['90%', '70%', '30%']} bg="slate.500" color="black" border="2px solid" borderColor="blue.400" borderRadius="lg" boxShadow="md" textAlign="center" mt="8">
-        <form onSubmit={handleSubmit}>
+        <form>
           <FormControl p="8">
             <InputGroup>
               <InputLeftElement>
@@ -90,7 +89,7 @@ export default function Login() {
           </Button>
         </form>
       </Box>
-      <Text mt="8">Don't have an account ? <Link href='/register' >Join us today</Link></Text>
+      <Text mt="8">Don't have an account ? <Link href='/register' >Register from Here</Link></Text>
     </Box>
   )
 }

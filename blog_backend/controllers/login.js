@@ -28,7 +28,7 @@ const Login = async (req, res) => {
       secure: true,
       sameSite: 'None'
     }
-    return res.cookie('token', token, cookieOptions).status(200).json({
+    return res.cookie('jwt', token, cookieOptions).status(200).json({
       message: "Login successfully",
       data:token_data,
       token: token,

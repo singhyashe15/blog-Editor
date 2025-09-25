@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Box, FormControl, Input, Text, InputGroup,InputLeftElement, InputRightElement, Button, Link } from '@chakra-ui/react';
+import { Box, FormControl, Input, Text, InputGroup, InputLeftElement, InputRightElement, Button, Link, Icon } from '@chakra-ui/react';
 import { FaEyeSlash, FaEye, FaEnvelope, FaKey } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -25,6 +26,9 @@ const Register = () => {
     }));
   };
 
+  const handleOAuth2 = async () => {
+    window.open(`${import.meta.env.VITE_SERVER_URL}/auth/google`, "_self");
+  }
   // submit the record
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +47,7 @@ const Register = () => {
       } else {
         toast.success(res.data.msg);
         toast.success("Check Out your Email")
-        setUser({name:"", email:"", password:""}); // clear the details
+        setUser({ name: "", email: "", password: "" }); // clear the details
       }
     } catch (error) {
       toast.error(error.response.data.msg)
@@ -52,7 +56,7 @@ const Register = () => {
   return (
     <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" mt="10">
       <Text fontStyle="italic" fontSize="2xl" fontFamily="cursive" >Create an Account </Text>
-      <Box width={['90%', '70%', '30%']} bg="slate.500" color="black" border="2px solid" borderColor="blue.400" borderRadius="lg" boxShadow="md" textAlign="center">
+      <Box width={['90%', '70%', '30%']} bg="slate.500" color="black" border="2px solid" borderColor="blue.400" borderRadius="lg" boxShadow="md" textAlign="center" boxSizing='border-box'>
         <form onSubmit={handleSubmit}>
           <FormControl p="8">
             <Input name='name' placeholder='Name' my="4" onChange={handlechange} />
@@ -64,9 +68,9 @@ const Register = () => {
             </InputGroup>
 
             <InputGroup my="4">
-            <InputLeftElement>
-              <FaKey/>
-            </InputLeftElement>
+              <InputLeftElement>
+                <FaKey />
+              </InputLeftElement>
               <InputRightElement cursor="pointer" onClick={() => toggle('pass')}>
                 {
                   hide?.pass ? <FaEye /> : <FaEyeSlash />
@@ -81,6 +85,11 @@ const Register = () => {
             colorScheme='teal'
             type='submit' >
             Sign Up
+          </Button>
+
+          <Button m="4"  cursor='pointer' _hover={{bgColor:'blue.300'}} onClick={()=>handleOAuth2()}>
+            <Icon fontSize='lg'> <FcGoogle/></Icon>
+            <Text>Sign In With Google</Text>
           </Button>
         </form>
       </Box>
