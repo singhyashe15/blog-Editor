@@ -17,7 +17,7 @@ export default function BlogPost() {
   const [draftLoading, setDraftLoading] = useState(false);
   const [user, setUser] = useState(null);
 
-  const saveIntervalRef = useRef(null); // for 30s interval
+  // const saveIntervalRef = useRef(null); // for 30s interval
 
   // stored user detail from localstorage
   useEffect(() => {

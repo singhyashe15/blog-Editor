@@ -20,8 +20,6 @@ export const SocketProvider = ({ children }) => {
       reconnectionDelayMax: 2000,
       timeout: 20000,
     });
-
-    console.log(newSocket)
     setSocket(newSocket);
     return () => {
       if (newSocket) newSocket.disconnect();
