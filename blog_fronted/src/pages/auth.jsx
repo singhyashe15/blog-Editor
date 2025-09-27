@@ -8,7 +8,7 @@ const Auth = () => {
 
   useEffect(async () => {
     const verifyToken = async () => {
-      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/verifyToken`, {
+      const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/auth/verifyToken`, {
         withCredentials: true
       });
       localStorage.setItem('user',JSON.stringify(res.data.user));

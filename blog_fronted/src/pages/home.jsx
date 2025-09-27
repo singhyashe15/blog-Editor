@@ -19,7 +19,6 @@ export default function Home() {
   // get the user details
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    console.log(localStorage.getItem("user"))
     if (storedUser) {
       setUser(storedUser)
     }
@@ -29,7 +28,7 @@ export default function Home() {
     async function getPosts() {
       const url = import.meta.env.VITE_SERVER_URL;
       const res = await axios.get(`${url}/api/blogs/category/${search}`);
-      console.log(res)
+      
       if (res.data.success) {
         if (res.data.blogbyCategory.rowCount > 0) {
           setMsg(null);
@@ -39,19 +38,20 @@ export default function Home() {
         }
       }
     }
-    console.log(search)
-    getPosts();
+       
+    if (search !== "") {
+      getPosts();
+    }
 
   }, [search]);
 
   const getAllPosts = async () => {
     const url = import.meta.env.VITE_SERVER_URL;
     const res = await axios.get(`${url}/api/blogs`);
-    console.log(res);
     return res.data.success ? res.data.allBlogs.rows : [];
   }
   // get all recent post
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: "posts",
     queryFn: getAllPosts,
     staleTime: 10000
@@ -62,7 +62,6 @@ export default function Home() {
   }
 
   const handleRead = (id) => {
-    console.log(id)
     if (user) {
       navigate(`/blog/${id}`);
     } else {

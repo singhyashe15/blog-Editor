@@ -1,12 +1,17 @@
 import { Box, Button,  HStack, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Logout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     // clear the localStorage
+    const cookie = Cookies.get("jwt")
+    console.log(cookie);
+    
     localStorage.setItem('user', null);
+    Cookies.remove("jwt")
     navigate('/register',{replace:true})
   }
   return (
